@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type response struct {
@@ -19,10 +20,18 @@ func ResponseSuccess(c *gin.Context, data interface{}) {
 	})
 }
 
-func ResponseSuccessWithMsg(c *gin.Context,msg string,data interface{})  {
-	c.JSON(http.StatusOK,&response{
+func ResponseSuccessWithMsg(c *gin.Context, msg string, data interface{}) {
+	c.JSON(http.StatusOK, &response{
 		Code: 200,
 		Msg:  msg,
 		Data: data,
+	})
+}
+
+func ResponseError(c *gin.Context) {
+	c.JSON(http.StatusOK, &response{
+		Code: 300,
+		Msg:  "错误",
+		Data: nil,
 	})
 }
