@@ -73,7 +73,7 @@ func getTimeText(code constant.TimeCode) string {
 	case constant.TimeNight:
 		timeTextArr = []string{"晚上好", "晚安"}
 	case constant.TimeLateNight:
-		timeTextArr = []string{"夜深了", "晚安", "好梦"}
+		timeTextArr = []string{"晚安"}
 	}
 	// 返回随机内容
 	return timeTextArr[util.GetRange(len(timeTextArr))]
