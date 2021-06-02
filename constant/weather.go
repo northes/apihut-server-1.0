@@ -15,7 +15,7 @@ const (
 )
 
 var weatherMap = map[WeatherCode]string{
-	WeatherDefault: "默认",
+	WeatherDefault: "通用",
 	WeatherSunny:   "晴",
 	WeatherCloudy:  "阴",
 	WeatherCloud:   "云",
