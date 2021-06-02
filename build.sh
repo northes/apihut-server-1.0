@@ -24,3 +24,5 @@ rm apihut-server
 rm apihut-server.~
 echo "== Done! =="
 read -r -p "Exit?" input
+cd ./build/prod || exit
+start .
