@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"apihut-server/model"
 	"apihut-server/server"
 	"fmt"
 
@@ -8,11 +9,19 @@ import (
 )
 
 func GreetHandler(c *gin.Context) {
-	g, err := server.Greet()
+	var params model.Greet
+	err := c.ShouldBindQuery(&params)
 	if err != nil {
-		fmt.Println(err.Error())
-		ResponseError(c)
+		ResponseError(c, CodeParameterFailure)
 		return
 	}
+
+	g, err := server.Greet(&params)
+	if err != nil {
+		fmt.Println(err.Error())
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
 	ResponseSuccess(c, g)
 }

@@ -8,17 +8,29 @@ import (
 	"time"
 )
 
-func Greet() (*model.GreetRespond, error) {
+// Greet 招呼
+func Greet(g *model.Greet) (*model.GreetRespond, error) {
+	// 参数校验
 	t := getTimeCode()
-	greetList, err := mysql.GetGreet(t)
-	if err != nil {
-		return nil, err
+	if g.Time == 0 {
+		g.Time = t
 	}
-
-	greet := greetList[util.GetRange(len(greetList))]
-	return &model.GreetRespond{Words: getTimeText(t), Sentence: greet.Sentence, Author: greet.Author}, err
+	// 查数据库
+	greetList, err := mysql.GetGreet(g)
+	if err != nil {
+		if err != mysql.ErrNotExist {
+			return nil, err
+		}
+		greetList, err = mysql.GetGreet(&model.Greet{Time: 0})
+	}
+	// 随机抽取一条数据
+	if len(greetList) > 0 {
+		*g = greetList[util.GetRange(len(greetList))]
+	}
+	return &model.GreetRespond{Words: getTimeText(t), Sentence: g.Sentence, Author: g.Author}, err
 }
 
+// 获取时间代码
 func getTimeCode() constant.TimeCode {
 	hour := time.Now().Hour()
 	var t constant.TimeCode
@@ -43,6 +55,7 @@ func getTimeCode() constant.TimeCode {
 	return t
 }
 
+// 获取时间代码对应的文字
 func getTimeText(code constant.TimeCode) string {
 	var timeTextArr []string
 	timeTextArr = []string{"Hello"}
@@ -50,7 +63,7 @@ func getTimeText(code constant.TimeCode) string {
 	case constant.TimeEarlyMorning:
 		timeTextArr = []string{"凌晨啦"}
 	case constant.TimeMorning:
-		timeTextArr = []string{"早上好", "早安", "早~"}
+		timeTextArr = []string{"早上好", "早安", "早"}
 	case constant.TimeNoon:
 		timeTextArr = []string{"中午好"}
 	case constant.TimeAfternoon:
@@ -58,7 +71,7 @@ func getTimeText(code constant.TimeCode) string {
 	case constant.TimeEvening:
 		timeTextArr = []string{"傍晚好"}
 	case constant.TimeNight:
-		timeTextArr = []string{"晚上好"}
+		timeTextArr = []string{"晚上好", "晚安"}
 	case constant.TimeLateNight:
 		timeTextArr = []string{"夜深了", "晚安", "好梦"}
 	}
