@@ -10,13 +10,13 @@ type ResponseCode int
 
 const (
 	CodeSuccess          ResponseCode = 200
-	CodeInvalidParameter ResponseCode = 0
+	CodeParameterFailure ResponseCode = 0
 	CodeServerBusy       ResponseCode = 1
 )
 
 var responseCodeMap = map[ResponseCode]string{
 	CodeSuccess:          "成功",
-	CodeInvalidParameter: "参数错误",
+	CodeParameterFailure: "参数错误",
 	CodeServerBusy:       "服务繁忙",
 }
 
