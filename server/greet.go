@@ -18,7 +18,7 @@ func Greet(g *model.Greet) (*model.GreetRespond, error) {
 	// 查数据库
 	greetList, err := mysql.GetGreet(g)
 	if err != nil {
-		if err != mysql.ErrNotExist {
+		if err != mysql.ErrNotExist || g.NoRange {
 			return nil, err
 		}
 		greetList, err = mysql.GetGreet(&model.Greet{Time: 0})

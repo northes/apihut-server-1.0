@@ -10,6 +10,7 @@ type Greet struct {
 	Time     constant.TimeCode     `xorm:"notnull comment(语境时间)" json:"time" form:"time" binding:"gte=0,lte=7"`
 	Weather  constant.WeatherCode  `xorm:"notnull comment(语境天气)" json:"weather" form:"weather"`
 	Day      constant.DayCode      `xorm:"notnull comment(星期)" json:"day" form:"day"`
+	NoRange  bool                  `xorm:"-" json:"no_range" form:"no_range"`
 	Tags     string                `xorm:"comment(标签)" json:"-"`
 }
 
