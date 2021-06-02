@@ -1,22 +1,20 @@
 package model
 
-// Language： cn en
-// Time： 凌晨 早晨 中午 下午 傍晚 晚上 午夜 深夜
-// Weather：晴 阴 云 雨 雾 雪 台风
+import "apihut-server/constant"
 
 type Greet struct {
-	ID       int    `xorm:"pk index notnull comment(句子id)"`
-	Sentence string `xorm:"notnull comment(句子详情)"`
-	Author   string `xorm:"comment(句子作者)"`
-	Language int    `xorm:"notnull comment(语言)"`
-	Time     int    `xorm:"notnull comment(语境时间)"`
-	Weather  int    `xorm:"notnull comment(语境天气)"`
-	Day      int    `xorm:"notnull comment(星期)"`
-	Tags     string `xorm:"comment(标签)"`
+	ID       int                   `xorm:"pk index notnull comment(句子id)" json:"-"`
+	Sentence string                `xorm:"notnull comment(句子详情)" json:"sentence"`
+	Author   string                `xorm:"comment(句子作者)" json:"author"`
+	Language constant.LanguageCode `xorm:"notnull comment(语言)" json:"language" form:"language"`
+	Time     constant.TimeCode     `xorm:"notnull comment(语境时间)" json:"time" form:"time"`
+	Weather  constant.WeatherCode  `xorm:"notnull comment(语境天气)" json:"weather" form:"weather"`
+	Day      constant.DayCode      `xorm:"notnull comment(星期)" json:"day" form:"day"`
+	Tags     string                `xorm:"comment(标签)" json:"-"`
 }
 
 type GreetRespond struct {
 	Words    string `json:"words"`
-	Sentence string `json:"sentence"`
+	Sentence string `json:"sentence,omitempty"`
 	Author   string `json:"author,omitempty"`
 }
