@@ -25,7 +25,11 @@ func GetIPInfo(i *model.IP) (ipInfo *model.GaoDeIP, err error) {
 		return nil, err
 	}
 
+	if ipInfo.Status == "0" {
+		return nil, util.ErrRequest
+	}
+
 	ipInfo.Status, ipInfo.Info, ipInfo.Infocode = "", "", ""
 
-	return ipInfo, err
+	return ipInfo, nil
 }
