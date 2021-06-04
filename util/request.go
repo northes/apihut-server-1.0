@@ -3,7 +3,6 @@ package util
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -24,7 +23,6 @@ func HttpGetRequest(url string, result interface{}) error {
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&result)
-	fmt.Println(result)
 
 	return err
 }
