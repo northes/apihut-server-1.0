@@ -18,6 +18,7 @@ func Setup() *gin.Engine {
 	})
 	r.GET("/greet", controller.GreetHandler)
 	r.GET("/weather", controller.WeatherHandler)
+	r.GET("/ip", controller.IPHandler)
 
 	return r
 }
