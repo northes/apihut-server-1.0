@@ -7,13 +7,17 @@ import (
 	"fmt"
 )
 
+var (
+	ErrIPFormat = errors.New("IP格式错误")
+)
+
 // GetIPInfo 获取IP信息
 func GetIPInfo(i *model.IP) (ipInfo *model.GaoDeIP, err error) {
 	ipInfo = new(model.GaoDeIP)
 
 	address, version := util.ParseIP(i.IP)
 	if address == nil || version == 0 {
-		return nil, errors.New("IP格式错误")
+		return nil, ErrIPFormat
 	}
 
 	err = util.HttpGetRequest(fmt.Sprintf(

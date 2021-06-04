@@ -21,6 +21,10 @@ func IPHandler(c *gin.Context) {
 
 	ipInfo, err := server.GetIPInfo(&p)
 	if err != nil {
+		if err == server.ErrIPFormat {
+			ResponseErrorWithMsg(c, CodeParameterFailure, server.ErrIPFormat.Error())
+			return
+		}
 		ResponseError(c, CodeServerBusy)
 		return
 	}
