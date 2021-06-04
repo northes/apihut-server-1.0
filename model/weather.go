@@ -1,8 +1,8 @@
 package model
 
 type Weather struct {
-	City       string `json:"city" form:"city" binding:"required"`
-	Extensions string `json:"extensions" form:"extensions"`
+	City string `json:"city" form:"city" binding:"required"`
+	Type string `json:"type" form:"type"`
 }
 
 type GaoDeWeather struct {

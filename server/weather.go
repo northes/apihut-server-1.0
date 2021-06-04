@@ -11,7 +11,7 @@ func GetWeather(p *model.Weather) (interface{}, error) {
 	err := util.HttpGetRequest(fmt.Sprintf(
 		"https://restapi.amap.com/v3/weather/weatherInfo?parameters&key=b9bd34580b7133934c40a831703cc3fb&city=%s&extensions=%s",
 		p.City,
-		p.Extensions,
+		p.Type,
 	), &r)
 	if err != nil {
 		fmt.Println(err)
