@@ -53,3 +53,11 @@ func ResponseError(c *gin.Context, code ResponseCode) {
 		Data: nil,
 	})
 }
+
+func ResponseErrorWithMsg(c *gin.Context, code ResponseCode, msg string) {
+	c.JSON(http.StatusOK, &response{
+		Code: code,
+		Msg:  msg,
+		Data: nil,
+	})
+}
