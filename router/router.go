@@ -17,6 +17,7 @@ func Setup() *gin.Engine {
 		c.String(http.StatusOK, "Home")
 	})
 	r.GET("/greet", controller.GreetHandler)
+	r.GET("/weather", controller.WeatherHandler)
 
 	return r
 }
