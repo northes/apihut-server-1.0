@@ -15,6 +15,10 @@ func Greet(g *model.Greet) (*model.GreetRespond, error) {
 	if g.Time == 0 {
 		g.Time = t
 	}
+	d := getDayCode()
+	if g.Day == 0 {
+		g.Day = d
+	}
 	// 查数据库
 	greetList, err := mysql.GetGreet(g)
 	if err != nil {
@@ -43,9 +47,9 @@ func getTimeCode() constant.TimeCode {
 		t = constant.TimeMorning
 	case hour < 13:
 		t = constant.TimeNoon
-	case hour < 16:
+	case hour < 18:
 		t = constant.TimeAfternoon
-	case hour < 20:
+	case hour < 21:
 		t = constant.TimeEvening
 	case hour < 24:
 		t = constant.TimeNight
@@ -77,4 +81,27 @@ func getTimeText(code constant.TimeCode) string {
 	}
 	// 返回随机内容
 	return timeTextArr[util.GetRange(len(timeTextArr))]
+}
+
+// 获取星期代码
+func getDayCode() constant.DayCode {
+	day := time.Now().Day() + 1
+	switch day {
+	case 1:
+		return constant.DayMonday
+	case 2:
+		return constant.DayTuesday
+	case 3:
+		return constant.DayWednesday
+	case 4:
+		return constant.DayThursday
+	case 5:
+		return constant.DayFriday
+	case 6:
+		return constant.DaySaturday
+	case 7:
+		return constant.DaySunday
+	default:
+		return constant.DayDefault
+	}
 }
