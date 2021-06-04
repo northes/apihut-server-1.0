@@ -17,7 +17,9 @@ func GetWeather(p *model.Weather) (interface{}, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-
+	if r.Status == "0" {
+		return nil, util.ErrRequest
+	}
 	if len(r.Lives) == 0 {
 		return r.Forecasts, nil
 	}

@@ -2,9 +2,14 @@ package util
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
+)
+
+var (
+	ErrRequest = errors.New("请求失败")
 )
 
 var client = http.Client{
