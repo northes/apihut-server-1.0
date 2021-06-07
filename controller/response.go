@@ -9,15 +9,17 @@ import (
 type ResponseCode int
 
 const (
-	CodeSuccess          ResponseCode = 200
-	CodeParameterFailure ResponseCode = 0
-	CodeServerBusy       ResponseCode = 1
+	CodeSuccess              ResponseCode = 200
+	CodeParameterFailure     ResponseCode = 300
+	CodeServerRequestFailure ResponseCode = 520
+	CodeServerBusy           ResponseCode = 530
 )
 
 var responseCodeMap = map[ResponseCode]string{
-	CodeSuccess:          "成功",
-	CodeParameterFailure: "参数错误",
-	CodeServerBusy:       "服务繁忙",
+	CodeSuccess:              "成功",
+	CodeParameterFailure:     "参数错误",
+	CodeServerRequestFailure: "后端请求失败",
+	CodeServerBusy:           "服务繁忙",
 }
 
 type response struct {
