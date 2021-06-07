@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+// GetWeather 获取天气
 func GetWeather(p *model.Weather) (interface{}, error) {
 	var r model.GaoDeWeather
 	err := util.HttpGetRequest(fmt.Sprintf(

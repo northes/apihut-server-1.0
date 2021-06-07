@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Greet 招呼
+// Greet 获取一句问候
 func Greet(g *model.Greet) (*model.GreetRespond, error) {
 	// 参数校验
 	t := getTimeCode()

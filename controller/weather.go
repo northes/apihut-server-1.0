@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// WeatherHandler 天气控制器
 func WeatherHandler(c *gin.Context) {
 	var p model.Weather
 	err := c.ShouldBindQuery(&p)

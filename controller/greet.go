@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GreetHandler 一句问候控制器
 func GreetHandler(c *gin.Context) {
 	var params model.Greet
 	err := c.ShouldBindQuery(&params)

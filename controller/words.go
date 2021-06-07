@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// WordsHandler 分词
+// WordsHandler 分词控制器
 func WordsHandler(c *gin.Context) {
 	var w model.Words
 	err := c.ShouldBindQuery(&w)

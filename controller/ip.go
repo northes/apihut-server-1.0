@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// IPHandler IP控制器
 func IPHandler(c *gin.Context) {
 	var p model.IP
 	err := c.ShouldBindQuery(&p)

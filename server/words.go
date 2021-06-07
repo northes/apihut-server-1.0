@@ -17,7 +17,7 @@ const (
 	CutTypeAll    = "all"
 )
 
-// GetWords 分词
+// GetWords 获取分词
 func GetWords(w *model.Words) (words []string, err error) {
 	var seg gse.Segmenter
 	err = seg.LoadDict("./data/dict/dictionary.txt")
