@@ -31,11 +31,11 @@ func GetWords(w *model.Words) (words []string, err error) {
 	}
 
 	if w.Type == CutTypeBase {
-		words = seg.Cut(w.Word, w.Hmm)
+		words = seg.Cut(w.Text, w.Hmm)
 	} else if w.Type == CutTypeSearch {
-		words = seg.CutSearch(w.Word, w.Hmm)
+		words = seg.CutSearch(w.Text, w.Hmm)
 	} else if w.Type == CutTypeAll {
-		words = seg.CutAll(w.Word)
+		words = seg.CutAll(w.Text)
 	} else {
 		return nil, ErrCutType
 	}
