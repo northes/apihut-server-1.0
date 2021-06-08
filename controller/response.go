@@ -23,9 +23,10 @@ var responseCodeMap = map[ResponseCode]string{
 }
 
 type response struct {
-	Code ResponseCode `json:"code"`
-	Msg  string       `json:"msg"`
-	Data interface{}  `json:"data,omitempty"`
+	Code             ResponseCode `json:"code"`
+	Msg              string       `json:"msg"`
+	Data             interface{}  `json:"data,omitempty"`
+	DocumentationUrl string       `json:"documentation_url,omitempty"`
 }
 
 func (c ResponseCode) Msg() string {
@@ -50,16 +51,18 @@ func ResponseSuccessWithMsg(c *gin.Context, msg string, data interface{}) {
 
 func ResponseError(c *gin.Context, code ResponseCode) {
 	c.JSON(http.StatusOK, &response{
-		Code: code,
-		Msg:  code.Msg(),
-		Data: nil,
+		Code:             code,
+		Msg:              code.Msg(),
+		Data:             nil,
+		DocumentationUrl: "https://docs.apihut.net/",
 	})
 }
 
 func ResponseErrorWithMsg(c *gin.Context, code ResponseCode, msg string) {
 	c.JSON(http.StatusOK, &response{
-		Code: code,
-		Msg:  msg,
-		Data: nil,
+		Code:             code,
+		Msg:              msg,
+		Data:             nil,
+		DocumentationUrl: "https://docs.apihut.net/",
 	})
 }
