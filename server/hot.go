@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gocolly/colly/proxy"
+
 	"golang.org/x/text/encoding/simplifiedchinese"
 
 	"github.com/gocolly/colly"
@@ -41,11 +43,11 @@ func GetBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
 	)
 
 	// 设置代理IP
-	//if p, err := proxy.RoundRobinProxySwitcher(
-	//	*proxyIP,
-	//); err == nil {
-	//	c.SetProxyFunc(p)
-	//}
+	if p, err := proxy.RoundRobinProxySwitcher(
+		*proxyIP,
+	); err == nil {
+		c.SetProxyFunc(p)
+	}
 
 	extensions.RandomUserAgent(c)
 	extensions.Referer(c)
@@ -96,11 +98,11 @@ func GetSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
 	)
 
 	//设置代理IP
-	//if p, err := proxy.RoundRobinProxySwitcher(
-	//	*proxyIP,
-	//); err == nil {
-	//	c.SetProxyFunc(p)
-	//}
+	if p, err := proxy.RoundRobinProxySwitcher(
+		*proxyIP,
+	); err == nil {
+		c.SetProxyFunc(p)
+	}
 
 	extensions.RandomUserAgent(c)
 	extensions.Referer(c)
