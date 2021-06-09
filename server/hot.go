@@ -14,18 +14,26 @@ import (
 )
 
 func GetHot() ([]model.HotItem, error) {
-	return GetBaiduHot()
+	// 获取代理IP
+	proxyIP, err := GetProxyIP()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(proxyIP)
+
+	return GetBaiduHot(&proxyIP)
 }
 
-func GetBaiduHot() (hotList []model.HotItem, err error) {
+func GetBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
 
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"),
 		colly.MaxDepth(1),
 	)
 
+	// 设置代理IP
 	if p, err := proxy.RoundRobinProxySwitcher(
-		"http://113.117.194.115:12000",
+		*proxyIP,
 	); err == nil {
 		c.SetProxyFunc(p)
 	}
@@ -55,10 +63,10 @@ func GetBaiduHot() (hotList []model.HotItem, err error) {
 		fmt.Println("Visiting", r.URL)
 	})
 
-	//c.Visit("http://top.baidu.com/buzz?b=1&fr=topindex")
-	c.Visit("http://baidu.apihut.net/")
+	c.Visit("http://top.baidu.com/buzz?b=1&fr=topindex")
+	//c.Visit("http://baidu.apihut.net/")
 
-	fmt.Println(hotList[1:])
+	//fmt.Println(hotList[1:])
 
 	return hotList[1:], err
 }
