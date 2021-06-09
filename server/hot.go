@@ -28,6 +28,8 @@ func GetHot(site string) ([]model.HotItem, error) {
 		return GetBaiduHot(&proxyIP)
 	case constant.SiteNameSina:
 		return GetSinaHot(&proxyIP)
+	case constant.SiteNameThePaper:
+		return GetThePaperHot(&proxyIP)
 	default:
 		return GetBaiduHot(&proxyIP)
 	}
@@ -107,6 +109,26 @@ func GetSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
 
 	return hotList, err
 }
+
+func GetThePaperHot(proxyIP *string) (hotList []model.HotItem, err error) {
+
+	c := GetColly(proxyIP)
+
+	c.OnHTML("#listhot0 li:not(.list_more)", func(e *colly.HTMLElement) {
+		title := e.ChildText("a")
+		href := e.ChildAttr("a", "href")
+		//fmt.Printf("Title:%s \n URL: https://www.thepaper.cn/%s \n", title, href)
+
+		hotList = append(hotList, model.HotItem{
+			Title: title,
+			Url:   "https://www.thepaper.cn/" + href,
+		})
+	})
+
+	c.Visit(constant.ThePaperHotUrl)
+	return hotList, nil
+}
+
 // GetColly 返回Colly收集器
 func GetColly(proxyIP *string) *colly.Collector {
 	c := colly.NewCollector(
