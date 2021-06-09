@@ -2,9 +2,14 @@ package redis
 
 import (
 	"apihut-server/config"
+	"errors"
 	"fmt"
 
 	"github.com/go-redis/redis"
+)
+
+var (
+	ErrValueNotExit = errors.New("值不存在")
 )
 
 var rdb *redis.Client
