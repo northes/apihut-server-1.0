@@ -4,6 +4,7 @@ const (
 	SiteNameBaidu    = "baidu"
 	SiteNameSina     = "sina"
 	SiteNameThePaper = "thepaper"
+	SiteNameZhihu    = "zhihu"
 )
 
 const (
@@ -13,4 +14,5 @@ const (
 	//SinaHotUrl = "http://sina.apihut.net/"
 	SinaHrefUrl    = "https://s.weibo.com"
 	ThePaperHotUrl = "https://www.thepaper.cn/"
+	ZhihuHotUrl    = "https://www.zhihu.com/billboard"
 )

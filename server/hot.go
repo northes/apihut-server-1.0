@@ -3,6 +3,7 @@ package server
 import (
 	"apihut-server/constant"
 	"apihut-server/model"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -30,6 +31,8 @@ func GetHot(site string) ([]model.HotItem, error) {
 		return getSinaHot(&proxyIP)
 	case constant.SiteNameThePaper:
 		return getThePaperHot(&proxyIP)
+	case constant.SiteNameZhihu:
+		return getZhihuHot(&proxyIP)
 	default:
 		return getBaiduHot(&proxyIP)
 	}
@@ -127,6 +130,34 @@ func getThePaperHot(proxyIP *string) (hotList []model.HotItem, err error) {
 	})
 
 	c.Visit(constant.ThePaperHotUrl)
+	return hotList, nil
+}
+
+// 获取知乎热榜
+func getZhihuHot(proxyIP *string) (hotList []model.HotItem, err error) {
+	var zhihu model.ZhihuHot
+	c := getColly(proxyIP)
+	c.OnHTML("#js-initialData", func(e *colly.HTMLElement) {
+		//fmt.Println(e.Text)
+		err := json.Unmarshal([]byte(e.Text), &zhihu)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	})
+
+	c.Visit(constant.ZhihuHotUrl)
+
+	zhihuList := zhihu.InitialState.Topstory.HotList
+	for i := 0; i < len(zhihuList); i++ {
+		item := zhihuList[i].Target
+		hotList = append(hotList, model.HotItem{
+			Title:   item.TitleArea.Text,
+			Url:     item.Link.URL,
+			Popular: item.MetricsArea.Text,
+			Extra:   item.ExcerptArea.Text,
+		})
+	}
+
 	return hotList, nil
 }
 
