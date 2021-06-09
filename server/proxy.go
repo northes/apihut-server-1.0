@@ -33,10 +33,10 @@ func GetProxyIPFromKuaiNiao() (proxyIP string, err error) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return "", err
 	}
-	if p.Code == 1 || !p.Success {
-		return
+	if p.Code != 0 || !p.Success {
+		return "", util.ErrAPIRequest
 	}
 
 	proxyIP = fmt.Sprintf("http://%s:%s", p.Data[0].IP, strconv.FormatInt(p.Data[0].Port, 10))

@@ -19,7 +19,7 @@ func WeatherHandler(c *gin.Context) {
 
 	weather, err := server.GetWeather(&p)
 	if err != nil {
-		if err == util.ErrRequest {
+		if err == util.ErrAPIRequest {
 			ResponseError(c, CodeServerRequestFailure)
 			return
 		}

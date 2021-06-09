@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrRequest = errors.New("请求失败")
+	ErrAPIRequest = errors.New("接口请求失败")
 )
 
 var client = http.Client{

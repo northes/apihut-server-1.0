@@ -19,7 +19,7 @@ func GetWeather(p *model.Weather) (interface{}, error) {
 		return nil, err
 	}
 	if r.Status == "0" {
-		return nil, util.ErrRequest
+		return nil, util.ErrAPIRequest
 	}
 	if len(r.Lives) == 0 {
 		return r.Forecasts, nil
