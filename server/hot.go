@@ -37,20 +37,7 @@ func GetHot(site string) ([]model.HotItem, error) {
 
 func GetBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
 
-	c := colly.NewCollector(
-		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"),
-		colly.MaxDepth(1),
-	)
-
-	// 设置代理IP
-	if p, err := proxy.RoundRobinProxySwitcher(
-		*proxyIP,
-	); err == nil {
-		c.SetProxyFunc(p)
-	}
-
-	extensions.RandomUserAgent(c)
-	extensions.Referer(c)
+	c := GetColly(proxyIP)
 
 	c.OnHTML(".list-table tr:not(.item-tr)", func(e *colly.HTMLElement) {
 		title, _ := simplifiedchinese.GBK.NewDecoder().Bytes([]byte(string(e.ChildText(".keyword .list-title"))))
@@ -92,20 +79,7 @@ func GetBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
 }
 
 func GetSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
-	c := colly.NewCollector(
-		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"),
-		colly.MaxDepth(1),
-	)
-
-	//设置代理IP
-	if p, err := proxy.RoundRobinProxySwitcher(
-		*proxyIP,
-	); err == nil {
-		c.SetProxyFunc(p)
-	}
-
-	extensions.RandomUserAgent(c)
-	extensions.Referer(c)
+	c := GetColly(proxyIP)
 
 	c.OnHTML("tbody tr ", func(e *colly.HTMLElement) {
 		title := e.ChildText(".td-02 a")
@@ -132,4 +106,23 @@ func GetSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
 	c.Visit(constant.SinaHotUrl)
 
 	return hotList, err
+}
+// GetColly 返回Colly收集器
+func GetColly(proxyIP *string) *colly.Collector {
+	c := colly.NewCollector(
+		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"),
+		colly.MaxDepth(1),
+	)
+
+	//设置代理IP
+	if p, err := proxy.RoundRobinProxySwitcher(
+		*proxyIP,
+	); err == nil {
+		c.SetProxyFunc(p)
+	}
+
+	extensions.RandomUserAgent(c)
+	extensions.Referer(c)
+
+	return c
 }
