@@ -6,7 +6,7 @@ import (
 
 // SetProxyIP 设置代理IP
 func SetProxyIP(ip string) (err error) {
-	err = rdb.Set(KeyPrefix+KeyProxyIP, ip, 5*time.Hour).Err()
+	err = rdb.Set(KeyPrefix+KeyProxyIP, ip, 1*time.Minute).Err()
 	return
 }
 
