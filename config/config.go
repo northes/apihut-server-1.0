@@ -10,6 +10,7 @@ var Conf = new(AppConfig)
 
 type AppConfig struct {
 	*MySQLConfig `mapstructure:"mysql"`
+	*RedisConfig `mapstructure:"redis"`
 }
 
 type MySQLConfig struct {
@@ -20,6 +21,14 @@ type MySQLConfig struct {
 	Port         int    `mapstructure:"port"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
+}
+
+type RedisConfig struct {
+	Host     string `mapstructure:"host"`
+	Password string `mapstructure:"password"`
+	Port     int    `mapstructure:"port"`
+	DB       int    `mapstructure:"db"`
+	PoolSize int    `mapstructure:"pool_size"`
 }
 
 func Init() (err error) {
