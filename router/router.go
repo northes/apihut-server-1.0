@@ -18,7 +18,7 @@ func Setup() *gin.Engine {
 	r.GET("/weather", controller.WeatherHandler)
 	r.GET("/ip", controller.IPHandler)
 	r.GET("/words", controller.WordsHandler)
-	r.GET("/hot", controller.HotHandler)
+	r.GET("/hot/:site", controller.HotHandler)
 
 	r.NoRoute(controller.NotfoundHandler)
 	return r

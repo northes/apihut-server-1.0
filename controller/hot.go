@@ -9,7 +9,10 @@ import (
 )
 
 func HotHandler(c *gin.Context) {
-	hotList, err := server.GetHot()
+
+	site := c.Param("site")
+
+	hotList, err := server.GetHot(site)
 	if err != nil {
 		ResponseError(c, CodeServerRequestFailure)
 		return
