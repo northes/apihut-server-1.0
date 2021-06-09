@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"apihut-server/constant"
 	"apihut-server/model"
 	"apihut-server/server"
 	"time"
@@ -9,8 +10,18 @@ import (
 )
 
 func HotHandler(c *gin.Context) {
-
 	site := c.Param("site")
+
+	// 参数检查
+	if site != constant.SiteNameBaidu &&
+		site != constant.SiteNameSina &&
+		site != constant.SiteNameZhihu &&
+		site != constant.SiteNameThePaper &&
+		site != constant.SiteNameBilibili &&
+		site != constant.SiteNameBilibiliShort {
+		ResponseError(c, CodeParameterFailure)
+		return
+	}
 
 	hotList, err := server.GetHot(site)
 	if err != nil {
