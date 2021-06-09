@@ -15,37 +15,38 @@ import (
 	"github.com/gocolly/colly/extensions"
 )
 
-func GetHot(site string) ([]model.HotItem, error) {
+var myProxyIP string
+
+func GetHot(site string) (hotList []model.HotItem, err error) {
 	// 获取代理IP
-	proxyIP, err := GetProxyIP()
+	myProxyIP, err = GetProxyIP()
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println(proxyIP)
 
 	switch site {
 	case constant.SiteNameBaidu:
-		return getBaiduHot(&proxyIP)
+		return getBaiduHot()
 	case constant.SiteNameSina:
-		return getSinaHot(&proxyIP)
+		return getSinaHot()
 	case constant.SiteNameThePaper:
-		return getThePaperHot(&proxyIP)
+		return getThePaperHot()
 	case constant.SiteNameZhihu:
-		return getZhihuHot(&proxyIP)
+		return getZhihuHot()
 	case constant.SiteNameBilibili:
-		return getBiliBiliHot(&proxyIP)
+		return getBiliBiliHot()
 	case constant.SiteNameBilibiliShort:
-		return getBiliBiliHot(&proxyIP)
+		return getBiliBiliHot()
 	default:
-		return getBaiduHot(&proxyIP)
+		return getBaiduHot()
 	}
 }
 
 // 获取百度热榜
-func getBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
+func getBaiduHot() (hotList []model.HotItem, err error) {
 
-	c := getColly(proxyIP)
+	c := getColly()
 
 	c.OnHTML(".list-table tr:not(.item-tr)", func(e *colly.HTMLElement) {
 		title, _ := simplifiedchinese.GBK.NewDecoder().Bytes([]byte(string(e.ChildText(".keyword .list-title"))))
@@ -74,21 +75,15 @@ func getBaiduHot(proxyIP *string) (hotList []model.HotItem, err error) {
 
 	})
 
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
-	})
-
 	c.Visit(constant.BaiduHotUrl)
 	//c.Visit("http://baidu.apihut.net/")
-
-	//fmt.Println(hotList[1:])
 
 	return hotList[1:], err
 }
 
 // 获取微博热搜
-func getSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
-	c := getColly(proxyIP)
+func getSinaHot() (hotList []model.HotItem, err error) {
+	c := getColly()
 
 	c.OnHTML("tbody tr ", func(e *colly.HTMLElement) {
 		title := e.ChildText(".td-02 a")
@@ -118,9 +113,9 @@ func getSinaHot(proxyIP *string) (hotList []model.HotItem, err error) {
 }
 
 // 获取澎湃新闻热闻
-func getThePaperHot(proxyIP *string) (hotList []model.HotItem, err error) {
+func getThePaperHot() (hotList []model.HotItem, err error) {
 
-	c := getColly(proxyIP)
+	c := getColly()
 
 	c.OnHTML("#listhot0 li:not(.list_more)", func(e *colly.HTMLElement) {
 		title := e.ChildText("a")
@@ -138,9 +133,9 @@ func getThePaperHot(proxyIP *string) (hotList []model.HotItem, err error) {
 }
 
 // 获取知乎热榜
-func getZhihuHot(proxyIP *string) (hotList []model.HotItem, err error) {
+func getZhihuHot() (hotList []model.HotItem, err error) {
 	var zhihu model.ZhihuHot
-	c := getColly(proxyIP)
+	c := getColly()
 	c.OnHTML("#js-initialData", func(e *colly.HTMLElement) {
 		//fmt.Println(e.Text)
 		err := json.Unmarshal([]byte(e.Text), &zhihu)
@@ -166,8 +161,8 @@ func getZhihuHot(proxyIP *string) (hotList []model.HotItem, err error) {
 }
 
 // 获取Bilibili热榜
-func getBiliBiliHot(proxyIP *string) (hotList []model.HotItem, err error) {
-	c := getColly(proxyIP)
+func getBiliBiliHot() (hotList []model.HotItem, err error) {
+	c := getColly()
 	c.OnHTML(".rank-list li", func(e *colly.HTMLElement) {
 		title := e.ChildText(".info .title")
 		href := e.ChildAttr(".info .title", "href")
@@ -190,7 +185,7 @@ func getBiliBiliHot(proxyIP *string) (hotList []model.HotItem, err error) {
 }
 
 // 返回Colly收集器
-func getColly(proxyIP *string) *colly.Collector {
+func getColly() *colly.Collector {
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"),
 		colly.MaxDepth(1),
@@ -198,9 +193,10 @@ func getColly(proxyIP *string) *colly.Collector {
 
 	//设置代理IP
 	if p, err := proxy.RoundRobinProxySwitcher(
-		*proxyIP,
+		myProxyIP,
 	); err == nil {
 		c.SetProxyFunc(p)
+		fmt.Println("Use ProxyIP: " + myProxyIP)
 	}
 
 	extensions.RandomUserAgent(c)
