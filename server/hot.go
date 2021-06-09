@@ -33,6 +33,10 @@ func GetHot(site string) ([]model.HotItem, error) {
 		return getThePaperHot(&proxyIP)
 	case constant.SiteNameZhihu:
 		return getZhihuHot(&proxyIP)
+	case constant.SiteNameBilibili:
+		return getBiliBiliHot(&proxyIP)
+	case constant.SiteNameBilibiliShort:
+		return getBiliBiliHot(&proxyIP)
 	default:
 		return getBaiduHot(&proxyIP)
 	}
@@ -157,6 +161,30 @@ func getZhihuHot(proxyIP *string) (hotList []model.HotItem, err error) {
 			Extra:   item.ExcerptArea.Text,
 		})
 	}
+
+	return hotList, nil
+}
+
+// 获取Bilibili热榜
+func getBiliBiliHot(proxyIP *string) (hotList []model.HotItem, err error) {
+	c := getColly(proxyIP)
+	c.OnHTML(".rank-list li", func(e *colly.HTMLElement) {
+		title := e.ChildText(".info .title")
+		href := e.ChildAttr(".info .title", "href")
+		pts := e.ChildText(".info .pts div")
+		author := e.ChildText(".info .detail .up-name")
+		play := e.ChildText(".info .detail > span:first-child")
+
+		hotList = append(hotList, model.HotItem{
+			Title:   title,
+			Url:     "https:" + href,
+			Popular: pts,
+			Author:  author,
+			Extra:   play,
+		})
+	})
+
+	c.Visit(constant.BilibiliHotUrl)
 
 	return hotList, nil
 }

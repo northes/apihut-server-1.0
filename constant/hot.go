@@ -1,10 +1,12 @@
 package constant
 
 const (
-	SiteNameBaidu    = "baidu"
-	SiteNameSina     = "sina"
-	SiteNameThePaper = "thepaper"
-	SiteNameZhihu    = "zhihu"
+	SiteNameBaidu         = "baidu"
+	SiteNameSina          = "sina"
+	SiteNameThePaper      = "thepaper"
+	SiteNameZhihu         = "zhihu"
+	SiteNameBilibili      = "bilibili"
+	SiteNameBilibiliShort = "bili"
 )
 
 const (
@@ -15,4 +17,5 @@ const (
 	SinaHrefUrl    = "https://s.weibo.com"
 	ThePaperHotUrl = "https://www.thepaper.cn/"
 	ZhihuHotUrl    = "https://www.zhihu.com/billboard"
+	BilibiliHotUrl = "https://www.bilibili.com/v/popular/rank/all"
 )
