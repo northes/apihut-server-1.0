@@ -3,6 +3,7 @@ package main
 import (
 	"apihut-server/config"
 	"apihut-server/repository/mysql"
+	"apihut-server/repository/redis"
 	"apihut-server/router"
 	"fmt"
 )
@@ -20,6 +21,13 @@ func main() {
 		return
 	}
 	defer mysql.Close()
+	// 初始化Redis
+	if err = redis.Init(); err != nil {
+		fmt.Println("redis init err:", err.Error())
+		return
+	}
+	defer redis.Close()
+
 	// 加载路由
 	r := router.Setup()
 
