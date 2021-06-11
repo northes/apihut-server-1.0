@@ -25,7 +25,7 @@ var (
 	ErrDataUpdateMore1Hour = errors.New("热榜数据更新间隔超过1小时")
 )
 
-func GetHot(site string) (hotList []model.HotItem, err error) {
+func GetHot(site string) (hot *model.Hot, err error) {
 	// 获取代理IP
 	myProxyIP, err = GetProxyIP()
 	if err != nil {
@@ -33,7 +33,7 @@ func GetHot(site string) (hotList []model.HotItem, err error) {
 		return nil, err
 	}
 
-	hot, err := getFromLocalCache(site)
+	hot, err = getFromLocalCache(site)
 	if err != nil {
 		// 本地获取失败则在线抓取
 		switch site {
@@ -54,13 +54,14 @@ func GetHot(site string) (hotList []model.HotItem, err error) {
 		}
 	}
 	// 返回本地缓存数据
-	return hot.HotList, nil
+	return hot, nil
 }
 
 // 获取百度热榜
-func getBaiduHot() (hotList []model.HotItem, err error) {
+func getBaiduHot() (hot *model.Hot, err error) {
 
 	c := getColly()
+	list := make([]model.HotItem, 0)
 
 	c.OnHTML(".list-table tr:not(.item-tr)", func(e *colly.HTMLElement) {
 		title, _ := simplifiedchinese.GBK.NewDecoder().Bytes([]byte(string(e.ChildText(".keyword .list-title"))))
@@ -75,12 +76,10 @@ func getBaiduHot() (hotList []model.HotItem, err error) {
 			trend = "fall"
 		}
 
-		// 去除空格
-		nok := strings.Replace(string(title), " ", "", -1)
-		// 去除换行
-		non := strings.Replace(nok, "\n", "", -1)
+		nok := strings.Replace(string(title), " ", "", -1) // 去除空格
+		non := strings.Replace(nok, "\n", "", -1)          // 去除换行
 
-		hotList = append(hotList, model.HotItem{
+		list = append(list, model.HotItem{
 			Title:   non,
 			Url:     url,
 			Popular: popular,
@@ -91,22 +90,24 @@ func getBaiduHot() (hotList []model.HotItem, err error) {
 	c.Visit(constant.BaiduHotUrl)
 	//c.Visit("http://baidu.apihut.net/")
 
-	// 更新缓存
-	err = updateLocalCache(&model.Hot{
+	hot = &model.Hot{
 		SiteName:    constant.SiteNameBaidu,
-		HotList:     hotList[1:],
+		HotList:     list[1:],
 		CreatedTime: time.Now(),
-	})
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
 	if err != nil {
 		fmt.Println(constant.SiteNameBaidu + "本地热榜缓存更新失败...")
 	}
 
-	return hotList[1:], err
+	return hot, err
 }
 
 // 获取微博热搜
-func getSinaHot() (hotList []model.HotItem, err error) {
+func getSinaHot() (hot *model.Hot, err error) {
 	c := getColly()
+	list := make([]model.HotItem, 0)
 
 	c.OnHTML("tbody tr ", func(e *colly.HTMLElement) {
 		title := e.ChildText(".td-02 a")
@@ -122,7 +123,7 @@ func getSinaHot() (hotList []model.HotItem, err error) {
 			url = constant.SinaHrefUrl + href
 		}
 
-		hotList = append(hotList, model.HotItem{
+		list = append(list, model.HotItem{
 			Title:   title,
 			Url:     url,
 			Popular: popular,
@@ -132,33 +133,57 @@ func getSinaHot() (hotList []model.HotItem, err error) {
 
 	c.Visit(constant.SinaHotUrl)
 
-	return hotList, err
+	hot = &model.Hot{
+		SiteName:    constant.SiteNameSina,
+		HotList:     list,
+		CreatedTime: time.Now(),
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
+	if err != nil {
+		fmt.Println(constant.SiteNameSina + "本地热榜缓存更新失败...")
+	}
+
+	return hot, err
 }
 
 // 获取澎湃新闻热闻
-func getThePaperHot() (hotList []model.HotItem, err error) {
-
+func getThePaperHot() (hot *model.Hot, err error) {
 	c := getColly()
+	list := make([]model.HotItem, 0)
 
 	c.OnHTML("#listhot0 li:not(.list_more)", func(e *colly.HTMLElement) {
 		title := e.ChildText("a")
 		href := e.ChildAttr("a", "href")
 		//fmt.Printf("Title:%s \n URL: https://www.thepaper.cn/%s \n", title, href)
-
-		hotList = append(hotList, model.HotItem{
+		list = append(list, model.HotItem{
 			Title: title,
 			Url:   "https://www.thepaper.cn/" + href,
 		})
 	})
 
 	c.Visit(constant.ThePaperHotUrl)
-	return hotList, nil
+
+	hot = &model.Hot{
+		SiteName:    constant.SiteNameThePaper,
+		HotList:     list,
+		CreatedTime: time.Now(),
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
+	if err != nil {
+		fmt.Println(constant.SiteNameThePaper + "本地热榜缓存更新失败...")
+	}
+
+	return hot, nil
 }
 
 // 获取知乎热榜
-func getZhihuHot() (hotList []model.HotItem, err error) {
-	var zhihu model.ZhihuHot
+func getZhihuHot() (hot *model.Hot, err error) {
 	c := getColly()
+	var zhihu model.ZhihuHot
+	list := make([]model.HotItem, 0)
+
 	c.OnHTML("#js-initialData", func(e *colly.HTMLElement) {
 		//fmt.Println(e.Text)
 		err := json.Unmarshal([]byte(e.Text), &zhihu)
@@ -172,20 +197,31 @@ func getZhihuHot() (hotList []model.HotItem, err error) {
 	zhihuList := zhihu.InitialState.Topstory.HotList
 	for i := 0; i < len(zhihuList); i++ {
 		item := zhihuList[i].Target
-		hotList = append(hotList, model.HotItem{
+		list = append(list, model.HotItem{
 			Title:   item.TitleArea.Text,
 			Url:     item.Link.URL,
 			Popular: item.MetricsArea.Text,
 			Extra:   item.ExcerptArea.Text,
 		})
 	}
+	hot = &model.Hot{
+		SiteName:    constant.SiteNameZhihu,
+		HotList:     list,
+		CreatedTime: time.Now(),
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
+	if err != nil {
+		fmt.Println(constant.SiteNameZhihu + "本地热榜缓存更新失败...")
+	}
 
-	return hotList, nil
+	return hot, nil
 }
 
 // 获取Bilibili热榜
-func getBiliBiliHot() (hotList []model.HotItem, err error) {
+func getBiliBiliHot() (hot *model.Hot, err error) {
 	c := getColly()
+	list := make([]model.HotItem, 0)
 	c.OnHTML(".rank-list li", func(e *colly.HTMLElement) {
 		title := e.ChildText(".info .title")
 		href := e.ChildAttr(".info .title", "href")
@@ -193,7 +229,7 @@ func getBiliBiliHot() (hotList []model.HotItem, err error) {
 		author := e.ChildText(".info .detail .up-name")
 		play := e.ChildText(".info .detail > span:first-child")
 
-		hotList = append(hotList, model.HotItem{
+		list = append(list, model.HotItem{
 			Title:   title,
 			Url:     "https:" + href,
 			Popular: pts,
@@ -203,8 +239,17 @@ func getBiliBiliHot() (hotList []model.HotItem, err error) {
 	})
 
 	c.Visit(constant.BilibiliHotUrl)
-
-	return hotList, nil
+	hot = &model.Hot{
+		SiteName:    constant.SiteNameBilibili,
+		HotList:     list,
+		CreatedTime: time.Now(),
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
+	if err != nil {
+		fmt.Println(constant.SiteNameBilibili + "本地热榜缓存更新失败...")
+	}
+	return hot, nil
 }
 
 // 返回Colly收集器
