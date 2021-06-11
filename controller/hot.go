@@ -17,7 +17,8 @@ func HotHandler(c *gin.Context) {
 		siteName != constant.SiteNameZhihu &&
 		siteName != constant.SiteNameThePaper &&
 		siteName != constant.SiteNameBilibili &&
-		siteName != constant.SiteNameBilibiliShort {
+		siteName != constant.SiteNameBilibiliShort &&
+		siteName != constant.SiteNameITHome {
 		ResponseError(c, CodeParameterFailure)
 		return
 	}

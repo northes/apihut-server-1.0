@@ -7,6 +7,7 @@ const (
 	SiteNameZhihu         = "zhihu"
 	SiteNameBilibili      = "bilibili"
 	SiteNameBilibiliShort = "bili"
+	SiteNameITHome        = "ithome"
 )
 
 const (
@@ -18,4 +19,5 @@ const (
 	ThePaperHotUrl = "https://www.thepaper.cn/"
 	ZhihuHotUrl    = "https://www.zhihu.com/billboard"
 	BilibiliHotUrl = "https://www.bilibili.com/v/popular/rank/all"
+	ITHomeHotUrl   = "https://www.ithome.com/"
 )

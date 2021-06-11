@@ -25,6 +25,7 @@ var (
 	ErrDataUpdateMore1Hour = errors.New("热榜数据更新间隔超过1小时")
 )
 
+// GetHot 获取热榜
 func GetHot(site string) (hot *model.Hot, err error) {
 	// 获取代理IP
 	myProxyIP, err = GetProxyIP()
@@ -49,6 +50,8 @@ func GetHot(site string) (hot *model.Hot, err error) {
 			return getBiliBiliHot()
 		case constant.SiteNameBilibiliShort:
 			return getBiliBiliHot()
+		case constant.SiteNameITHome:
+			return getITHome()
 		default:
 			return getBaiduHot()
 		}
@@ -249,6 +252,31 @@ func getBiliBiliHot() (hot *model.Hot, err error) {
 	if err != nil {
 		fmt.Println(constant.SiteNameBilibili + "本地热榜缓存更新失败...")
 	}
+	return hot, nil
+}
+
+func getITHome() (hot *model.Hot, err error) {
+	c := getColly()
+	list := make([]model.HotItem, 0)
+
+	c.OnHTML("#rank > #d-1 > li", func(e *colly.HTMLElement) {
+		title := e.ChildText("a")
+		url := e.ChildAttr("a", "href")
+		list = append(list, model.HotItem{Title: title, Url: url})
+	})
+	c.Visit(constant.ITHomeHotUrl)
+
+	hot = &model.Hot{
+		SiteName:    constant.SiteNameITHome,
+		HotList:     list,
+		CreatedTime: time.Now(),
+	}
+	// 更新缓存
+	err = updateLocalCache(hot)
+	if err != nil {
+		fmt.Println(constant.SiteNameBilibili + "本地热榜缓存更新失败...")
+	}
+
 	return hot, nil
 }
 
