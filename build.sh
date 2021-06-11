@@ -17,8 +17,8 @@ echo "-> 移动..."
 if [ ! -d "./build/prod/config/" ]; then
   mkdir -p "./build/prod/config/"
 fi
-cp -u -i apihut-server ./build/prod/apihut-server
-cp -u -i ./config/apihut.yml ./build/prod/config/apihut.yml
+cp -u apihut-server ./build/prod/apihut-server
+cp -u ./config/apihut.yml ./build/prod/config/apihut.yml
 echo "-> 删除产出文件..."
 rm apihut-server
 rm apihut-server.~
