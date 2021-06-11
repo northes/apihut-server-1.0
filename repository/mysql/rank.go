@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"apihut-server/constant"
 	"apihut-server/model"
 	"errors"
 )
@@ -17,7 +18,7 @@ func CreateRank(hot *model.Rank) (err error) {
 	return nil
 }
 
-func GetRank(siteName string) (hot *model.Rank, err error) {
+func GetRank(siteName constant.SiteName) (hot *model.Rank, err error) {
 	hot = new(model.Rank)
 	has, err := engine.Where("site_name=?", siteName).Desc("created_time").Get(hot)
 	if !has {

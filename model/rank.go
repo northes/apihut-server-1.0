@@ -1,12 +1,15 @@
 package model
 
-import "time"
+import (
+	"apihut-server/constant"
+	"time"
+)
 
 type Rank struct {
-	ReportTime  string     `xorm:"-" json:"report_time"`
-	SiteName    string     `xorm:"notnull comment(网站名称)" json:"-"`
-	List        []RankItem `xorm:"notnull json comment(热榜)" json:"lists"`
-	CreatedTime time.Time  `xorm:"created comment(创建时间)" json:"-"`
+	ReportTime  string            `xorm:"-" json:"report_time"`
+	SiteName    constant.SiteName `xorm:"notnull VARCHAR(255) comment(网站名称)" json:"-"`
+	List        []RankItem        `xorm:"notnull json comment(热榜)" json:"lists"`
+	CreatedTime time.Time         `xorm:"created comment(创建时间)" json:"-"`
 }
 
 type RankItem struct {

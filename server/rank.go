@@ -26,7 +26,7 @@ var (
 )
 
 // GetRank 获取热榜
-func GetRank(site string) (rank *model.Rank, err error) {
+func GetRank(siteName constant.SiteName) (rank *model.Rank, err error) {
 	// 获取代理IP
 	myProxyIP, err = GetProxyIP()
 	if err != nil {
@@ -34,23 +34,21 @@ func GetRank(site string) (rank *model.Rank, err error) {
 		return nil, err
 	}
 
-	rank, err = getRankLocalCache(site)
+	rank, err = getRankLocalCache(siteName)
 	if err != nil {
 		// 本地获取失败则在线抓取
-		switch site {
-		case constant.SiteNameBaidu:
+		switch siteName {
+		case constant.Baidu:
 			return getBaiduRank()
-		case constant.SiteNameSina:
+		case constant.Weibo:
 			return getSinaRank()
-		case constant.SiteNameThePaper:
+		case constant.ThePaper:
 			return getThePaperRank()
-		case constant.SiteNameZhihu:
+		case constant.Zhihu:
 			return getZhihuRank()
-		case constant.SiteNameBilibili:
+		case constant.Bilibili:
 			return getBiliBiliRank()
-		case constant.SiteNameBilibiliShort:
-			return getBiliBiliRank()
-		case constant.SiteNameITHome:
+		case constant.ITHome:
 			return getITHomeRank()
 		default:
 			return getBaiduRank()
@@ -89,19 +87,18 @@ func getBaiduRank() (rank *model.Rank, err error) {
 			Trend:   trend,
 		})
 	})
-
-	c.Visit(constant.BaiduRankUrl)
+	c.Visit(constant.Baidu.RankUrl())
 	//c.Visit("http://baidu.apihut.net/")
 
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameBaidu,
+		SiteName:    constant.Baidu,
 		List:        list[1:],
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameBaidu + "本地热榜缓存更新失败...")
+		fmt.Println(constant.Baidu + "本地热榜缓存更新失败...")
 	}
 
 	return rank, err
@@ -133,18 +130,17 @@ func getSinaRank() (rank *model.Rank, err error) {
 			Extra:   tag,
 		})
 	})
-
-	c.Visit(constant.SinaRankUrl)
+	c.Visit(constant.Weibo.RankUrl())
 
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameSina,
+		SiteName:    constant.Weibo,
 		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameSina + "本地热榜缓存更新失败...")
+		fmt.Println(constant.Weibo + "本地热榜缓存更新失败...")
 	}
 
 	return rank, err
@@ -164,18 +160,17 @@ func getThePaperRank() (rank *model.Rank, err error) {
 			Url:   "https://www.thepaper.cn/" + href,
 		})
 	})
-
-	c.Visit(constant.ThePaperRankUrl)
+	c.Visit(constant.ThePaper.RankUrl())
 
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameThePaper,
+		SiteName:    constant.ThePaper,
 		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameThePaper + "本地热榜缓存更新失败...")
+		fmt.Println(constant.ThePaper + "本地热榜缓存更新失败...")
 	}
 
 	return rank, nil
@@ -194,8 +189,7 @@ func getZhihuRank() (rank *model.Rank, err error) {
 			fmt.Println(err.Error())
 		}
 	})
-
-	c.Visit(constant.ZhihuRankUrl)
+	c.Visit(constant.Zhihu.RankUrl())
 
 	zhihuList := zhihu.InitialState.Topstory.HotList
 	for i := 0; i < len(zhihuList); i++ {
@@ -208,14 +202,14 @@ func getZhihuRank() (rank *model.Rank, err error) {
 		})
 	}
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameZhihu,
+		SiteName:    constant.Zhihu,
 		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameZhihu + "本地热榜缓存更新失败...")
+		fmt.Println(constant.Zhihu + "本地热榜缓存更新失败...")
 	}
 
 	return rank, nil
@@ -240,17 +234,17 @@ func getBiliBiliRank() (rank *model.Rank, err error) {
 			Extra:   play,
 		})
 	})
+	c.Visit(constant.Bilibili.RankUrl())
 
-	c.Visit(constant.BilibiliRankUrl)
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameBilibili,
+		SiteName:    constant.Bilibili,
 		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameBilibili + "本地热榜缓存更新失败...")
+		fmt.Println(constant.Bilibili + "本地热榜缓存更新失败...")
 	}
 	return rank, nil
 }
@@ -264,17 +258,17 @@ func getITHomeRank() (rank *model.Rank, err error) {
 		url := e.ChildAttr("a", "href")
 		list = append(list, model.RankItem{Title: title, Url: url})
 	})
-	c.Visit(constant.ITHomeRankUrl)
+	c.Visit(constant.ITHome.RankUrl())
 
 	rank = &model.Rank{
-		SiteName:    constant.SiteNameITHome,
+		SiteName:    constant.ITHome,
 		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存
 	err = updateRankLocalCache(rank)
 	if err != nil {
-		fmt.Println(constant.SiteNameBilibili + "本地热榜缓存更新失败...")
+		fmt.Println(constant.Bilibili + "本地热榜缓存更新失败...")
 	}
 
 	return rank, nil
@@ -302,7 +296,7 @@ func getColly() *colly.Collector {
 }
 
 // 从本地缓存获取热榜数据
-func getRankLocalCache(siteName string) (rank *model.Rank, err error) {
+func getRankLocalCache(siteName constant.SiteName) (rank *model.Rank, err error) {
 	rank, err = mysql.GetRank(siteName)
 	if err != nil {
 		return nil, err
