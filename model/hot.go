@@ -1,23 +1,25 @@
 package model
 
+import "time"
+
 type HotRespond struct {
 	ReportTime string    `json:"report_time"`
 	List       []HotItem `json:"lists"`
 }
 
+type Hot struct {
+	SiteName    string    `xorm:"notnull comment(网站名称)"`
+	HotList     string    `xorm:"notnull json comment(热榜)"`
+	CreatedTime time.Time `xorm:"created comment(创建时间)"`
+}
+
 type HotItem struct {
-	// 标题
-	Title string `json:"title"`
-	// 链接
-	Url string `json:"url"`
-	// 热度
-	Popular string `json:"popular"`
-	// 趋势
-	Trend string `json:"trend,omitempty"`
-	// 作者
-	Author string `json:"author,omitempty"`
-	// 附加
-	Extra string `json:"extra"`
+	Title   string `json:"title"`            // 标题
+	Url     string `json:"url"`              // 链接
+	Popular string `json:"popular"`          // 热度
+	Trend   string `json:"trend,omitempty"`  // 趋势
+	Author  string `json:"author,omitempty"` // 作者
+	Extra   string `json:"extra"`            // 附加
 }
 
 type ZhihuHot struct {
