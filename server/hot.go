@@ -91,6 +91,16 @@ func getBaiduHot() (hotList []model.HotItem, err error) {
 	c.Visit(constant.BaiduHotUrl)
 	//c.Visit("http://baidu.apihut.net/")
 
+	// 更新缓存
+	err = updateLocalCache(&model.Hot{
+		SiteName:    constant.SiteNameBaidu,
+		HotList:     hotList[1:],
+		CreatedTime: time.Now(),
+	})
+	if err != nil {
+		fmt.Println(constant.SiteNameBaidu + "本地热榜缓存更新失败...")
+	}
+
 	return hotList[1:], err
 }
 
@@ -218,6 +228,7 @@ func getColly() *colly.Collector {
 	return c
 }
 
+// 从本地缓存获取热榜数据
 func getFromLocalCache(siteName string) (hot *model.Hot, err error) {
 	hot, err = mysql.GetHot(siteName)
 	if err != nil {
@@ -229,4 +240,9 @@ func getFromLocalCache(siteName string) (hot *model.Hot, err error) {
 		return hot, ErrDataUpdateMore1Hour
 	}
 	return hot, nil
+}
+
+// 更新本地热榜缓存
+func updateLocalCache(hot *model.Hot) (err error) {
+	return mysql.CreateHot(hot)
 }
