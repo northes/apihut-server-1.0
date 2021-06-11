@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func CreateHot(hot *model.Hot) (err error) {
+func CreateRank(hot *model.Rank) (err error) {
 	affected, err := engine.Insert(hot)
 	if err != nil {
 		return err
@@ -17,8 +17,8 @@ func CreateHot(hot *model.Hot) (err error) {
 	return nil
 }
 
-func GetHot(siteName string) (hot *model.Hot, err error) {
-	hot = new(model.Hot)
+func GetRank(siteName string) (hot *model.Rank, err error) {
+	hot = new(model.Rank)
 	has, err := engine.Where("site_name=?", siteName).Desc("created_time").Get(hot)
 	if !has {
 		return nil, errors.New("不存在")

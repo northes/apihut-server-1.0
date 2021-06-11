@@ -46,7 +46,7 @@ func Init(cfg *config.MySQLConfig) (err error) {
 	// 同步数据库
 	err = engine.Sync2(
 		new(model.Greet),
-		new(model.Hot),
+		new(model.Rank),
 	)
 	if err != nil {
 		fmt.Println("同步数据表结构错误", err.Error())

@@ -2,14 +2,14 @@ package model
 
 import "time"
 
-type Hot struct {
-	ReportTime  string    `xorm:"-" json:"report_time"`
-	SiteName    string    `xorm:"notnull comment(网站名称)" json:"-"`
-	HotList     []HotItem `xorm:"notnull json comment(热榜)" json:"lists"`
-	CreatedTime time.Time `xorm:"created comment(创建时间)" json:"-"`
+type Rank struct {
+	ReportTime  string     `xorm:"-" json:"report_time"`
+	SiteName    string     `xorm:"notnull comment(网站名称)" json:"-"`
+	List        []RankItem `xorm:"notnull json comment(热榜)" json:"lists"`
+	CreatedTime time.Time  `xorm:"created comment(创建时间)" json:"-"`
 }
 
-type HotItem struct {
+type RankItem struct {
 	Title   string `json:"title"`            // 标题
 	Url     string `json:"url"`              // 链接
 	Popular string `json:"popular"`          // 热度

@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HotHandler(c *gin.Context) {
+func RankHandler(c *gin.Context) {
 	siteName := c.Param("site")
 
 	// 参数检查
@@ -26,14 +26,14 @@ func HotHandler(c *gin.Context) {
 		siteName = constant.SiteNameBilibili
 	}
 
-	hotList, err := server.GetHot(siteName)
+	rank, err := server.GetRank(siteName)
 	if err != nil {
 		ResponseError(c, CodeServerRequestFailure)
 		return
 	}
 
-	ResponseSuccess(c, model.Hot{
-		ReportTime: hotList.CreatedTime.Format("2006-01-02 15:04:05"),
-		HotList:    hotList.HotList,
+	ResponseSuccess(c, model.Rank{
+		ReportTime: rank.CreatedTime.Format("2006-01-02 15:04:05"),
+		List:       rank.List,
 	})
 }
