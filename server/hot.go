@@ -1,12 +1,17 @@
 package server
 
 import (
+	"apihut-server/config"
 	"apihut-server/constant"
 	"apihut-server/model"
+	"apihut-server/repository/mysql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly/proxy"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -15,7 +20,10 @@ import (
 	"github.com/gocolly/colly/extensions"
 )
 
-var myProxyIP string
+var (
+	myProxyIP              string
+	ErrDataUpdateMore1Hour = errors.New("热榜数据更新间隔超过1小时")
+)
 
 func GetHot(site string) (hotList []model.HotItem, err error) {
 	// 获取代理IP
@@ -25,22 +33,28 @@ func GetHot(site string) (hotList []model.HotItem, err error) {
 		return nil, err
 	}
 
-	switch site {
-	case constant.SiteNameBaidu:
-		return getBaiduHot()
-	case constant.SiteNameSina:
-		return getSinaHot()
-	case constant.SiteNameThePaper:
-		return getThePaperHot()
-	case constant.SiteNameZhihu:
-		return getZhihuHot()
-	case constant.SiteNameBilibili:
-		return getBiliBiliHot()
-	case constant.SiteNameBilibiliShort:
-		return getBiliBiliHot()
-	default:
-		return getBaiduHot()
+	hot, err := getFromLocalCache(site)
+	if err != nil {
+		// 本地获取失败则在线抓取
+		switch site {
+		case constant.SiteNameBaidu:
+			return getBaiduHot()
+		case constant.SiteNameSina:
+			return getSinaHot()
+		case constant.SiteNameThePaper:
+			return getThePaperHot()
+		case constant.SiteNameZhihu:
+			return getZhihuHot()
+		case constant.SiteNameBilibili:
+			return getBiliBiliHot()
+		case constant.SiteNameBilibiliShort:
+			return getBiliBiliHot()
+		default:
+			return getBaiduHot()
+		}
 	}
+	// 返回本地缓存数据
+	return hot.HotList, nil
 }
 
 // 获取百度热榜
@@ -202,4 +216,17 @@ func getColly() *colly.Collector {
 	extensions.Referer(c)
 
 	return c
+}
+
+func getFromLocalCache(siteName string) (hot *model.Hot, err error) {
+	hot, err = mysql.GetHot(siteName)
+	if err != nil {
+		return nil, err
+	}
+	// 判断热榜数据是否超过一个小时
+	if time.Now().Sub(hot.CreatedTime).Hours() >= 1 {
+		// 刷新全部数据
+		return hot, ErrDataUpdateMore1Hour
+	}
+	return hot, nil
 }
