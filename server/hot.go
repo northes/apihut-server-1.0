@@ -194,7 +194,7 @@ func getColly() *colly.Collector {
 	//设置代理IP
 	if p, err := proxy.RoundRobinProxySwitcher(
 		myProxyIP,
-	); err == nil {
+	); err == nil && config.Conf.Mode == gin.ReleaseMode {
 		c.SetProxyFunc(p)
 		fmt.Println("Use ProxyIP: " + myProxyIP)
 	}
