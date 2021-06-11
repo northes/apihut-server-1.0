@@ -70,9 +70,8 @@ func getBaiduHot() (hotList []model.HotItem, err error) {
 			Title:   non,
 			Url:     url,
 			Popular: popular,
-			Extra:   trend,
+			Trend:   trend,
 		})
-
 	})
 
 	c.Visit(constant.BaiduHotUrl)
