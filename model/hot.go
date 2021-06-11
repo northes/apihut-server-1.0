@@ -9,7 +9,7 @@ type HotRespond struct {
 
 type Hot struct {
 	SiteName    string    `xorm:"notnull comment(网站名称)"`
-	HotList     string    `xorm:"notnull json comment(热榜)"`
+	HotList     []HotItem `xorm:"notnull json comment(热榜)"`
 	CreatedTime time.Time `xorm:"created comment(创建时间)"`
 }
 
