@@ -6,6 +6,7 @@ import (
 	"apihut-server/repository/redis"
 	"apihut-server/router"
 	"fmt"
+	"strconv"
 )
 
 func main() {
@@ -31,5 +32,5 @@ func main() {
 	// 加载路由
 	r := router.Setup()
 
-	r.Run()
+	r.Run(":" + strconv.Itoa(config.Conf.Port))
 }

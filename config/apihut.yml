@@ -1,4 +1,4 @@
-name: "apihut"
+name: "APIHut"
 mode: "debug"
 #mode: "release"
 port: 8080
