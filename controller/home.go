@@ -16,6 +16,7 @@ func HomeHandler(c *gin.Context) {
 		WeatherUrl string `json:"weather_url"`
 		GreetUrl   string `json:"greet_url"`
 		WordsUrl   string `json:"words_url"`
+		RankUrl    string `json:"rank_url"`
 	}
 
 	c.JSON(http.StatusOK, Home{
@@ -24,6 +25,7 @@ func HomeHandler(c *gin.Context) {
 		WeatherUrl: baseUrl + "/weather",
 		GreetUrl:   baseUrl + "/greet",
 		WordsUrl:   baseUrl + "/words",
+		RankUrl:    baseUrl + "/rank/:site_name",
 	})
 
 }
