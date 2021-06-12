@@ -13,6 +13,7 @@ func Setup() *gin.Engine {
 	r.Use(cors.Default())
 
 	r.GET("/", controller.HomeHandler)
+	r.StaticFile("favicon.ico", "./static/favicon.ico")
 
 	r.GET("/greet", controller.GreetHandler)
 	r.GET("/weather", controller.WeatherHandler)
