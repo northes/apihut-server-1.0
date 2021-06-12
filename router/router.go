@@ -19,6 +19,10 @@ func Setup() *gin.Engine {
 	r.GET("/ip", controller.IPHandler)
 	r.GET("/words", controller.WordsHandler)
 	r.GET("/rank/:site", controller.RankHandler)
+	bilibili := r.Group("/bilibili")
+	{
+		bilibili.GET("/av2bv", controller.BilibiliAv2Bv)
+	}
 
 	r.NoRoute(controller.NotfoundHandler)
 	return r
