@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -14,6 +15,7 @@ type AppConfig struct {
 	Port         int    `mapstructure:"port"`
 	*MySQLConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
+	*Path        `mapstructure:"path"`
 }
 
 type MySQLConfig struct {
@@ -32,6 +34,11 @@ type RedisConfig struct {
 	Port     int    `mapstructure:"port"`
 	DB       int    `mapstructure:"db"`
 	PoolSize int    `mapstructure:"pool_size"`
+}
+type Path struct {
+	Logs string `mapstructure:"logs"`
+	Data string `mapstructure:"data"`
+	Temp string `mapstructure:"temp"`
 }
 
 func Init() (err error) {
@@ -56,5 +63,14 @@ func Init() (err error) {
 	//		fmt.Printf("viper.Unmarshal failed, err:%v\n", err)
 	//	}
 	//})
+	// 创建目录
+	err = os.MkdirAll(Conf.Path.Temp+"/img/identicon", 777)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = os.MkdirAll(Conf.Path.Logs, 777)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return
 }
