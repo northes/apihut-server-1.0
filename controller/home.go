@@ -18,6 +18,7 @@ func HomeHandler(c *gin.Context) {
 		WordsUrl   string `json:"words_url"`
 		RankUrl    string `json:"rank_url"`
 		Av2BV      string `json:"av2bv_url"`
+		Avatar     string `json:"avatar"`
 	}
 
 	c.JSON(http.StatusOK, Home{
@@ -28,6 +29,7 @@ func HomeHandler(c *gin.Context) {
 		WordsUrl:   baseUrl + "/words",
 		RankUrl:    baseUrl + "/rank/:site_name",
 		Av2BV:      baseUrl + "/bilibili/av2bv",
+		Avatar:     baseUrl + "/avatar",
 	})
 
 }
