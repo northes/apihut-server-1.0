@@ -24,6 +24,7 @@ func Setup() *gin.Engine {
 	{
 		bilibili.GET("/av2bv", controller.BilibiliAv2Bv)
 	}
+	r.GET("/avatar", controller.AvatarHandler)
 
 	r.NoRoute(controller.NotfoundHandler)
 	return r
