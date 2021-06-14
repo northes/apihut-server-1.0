@@ -12,6 +12,7 @@ func Setup() *gin.Engine {
 
 	r.Use(cors.Default())
 
+	r.LoadHTMLGlob("templates/*")
 	r.GET("/", controller.HomeHandler)
 	r.StaticFile("favicon.ico", "./static/favicon.ico")
 

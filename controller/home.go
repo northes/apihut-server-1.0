@@ -21,16 +21,18 @@ func HomeHandler(c *gin.Context) {
 		Avatar     string `json:"avatar"`
 	}
 
-	c.JSON(http.StatusOK, Home{
-		DocsUrl:    "https://docs.apihut.net/",
-		IPUrl:      baseUrl + "/ip",
-		WeatherUrl: baseUrl + "/weather",
-		GreetUrl:   baseUrl + "/greet",
-		WordsUrl:   baseUrl + "/words",
-		RankUrl:    baseUrl + "/rank/:site_name",
-		Av2BV:      baseUrl + "/bilibili/av2bv",
-		Avatar:     baseUrl + "/avatar",
-	})
+	//c.JSON(http.StatusOK, Home{
+	//	DocsUrl:    "https://docs.apihut.net/",
+	//	IPUrl:      baseUrl + "/ip",
+	//	WeatherUrl: baseUrl + "/weather",
+	//	GreetUrl:   baseUrl + "/greet",
+	//	WordsUrl:   baseUrl + "/words",
+	//	RankUrl:    baseUrl + "/rank/:site_name",
+	//	Av2BV:      baseUrl + "/bilibili/av2bv",
+	//	Avatar:     baseUrl + "/avatar",
+	//})
+
+	c.HTML(http.StatusOK, "index.html", nil)
 
 }
 
