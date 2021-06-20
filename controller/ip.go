@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"apihut-server/model"
 	"apihut-server/server"
 
 	"github.com/gin-gonic/gin"
@@ -9,18 +8,17 @@ import (
 
 // IPHandler IP控制器
 func IPHandler(c *gin.Context) {
-	var p model.IP
-	err := c.ShouldBindQuery(&p)
-	if err != nil {
+	var ip string
+	ip, has := c.GetQuery("ip")
+	if len(ip) == 0 || !has {
+		ip = c.ClientIP()
+	}
+	if len(ip) == 0 {
 		ResponseError(c, CodeParameterFailure)
 		return
 	}
 
-	if len(p.IP) == 0 {
-		p.IP = c.ClientIP()
-	}
-
-	ipInfo, err := server.GetIPInfo(&p)
+	ipInfo, err := server.GetIPInfo(ip)
 	if err != nil {
 		if err == server.ErrIPFormat {
 			ResponseErrorWithMsg(c, CodeParameterFailure, server.ErrIPFormat.Error())

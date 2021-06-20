@@ -2,9 +2,11 @@ package server
 
 import (
 	"apihut-server/model"
+	"apihut-server/repository/mysql"
 	"apihut-server/util"
 	"errors"
 	"fmt"
+	"net"
 )
 
 var (
@@ -12,13 +14,26 @@ var (
 )
 
 // GetIPInfo 获取IP信息
-func GetIPInfo(i *model.IP) (ipInfo *model.GaoDeIP, err error) {
-	ipInfo = new(model.GaoDeIP)
+func GetIPInfo(ip string) (ipInfo *model.IP, err error) {
+	ipInfo = new(model.IP)
 
-	address, version := util.ParseIP(i.IP)
+	address, version := util.ParseIP(ip)
 	if address == nil || version == 0 {
 		return nil, ErrIPFormat
 	}
+
+	ipInfo, err = mysql.GetIP(ip)
+	if err != nil && err == mysql.ErrNotExist {
+		fmt.Println("从网络获取")
+		ipInfo, err = getIPInfoFromGaode(address, version)
+		_ = mysql.CreatIP(ipInfo)
+	}
+
+	return ipInfo, nil
+}
+
+func getIPInfoFromGaode(address net.IP, version int) (ipInfo *model.IP, err error) {
+	ipInfo = new(model.IP)
 
 	err = util.HttpGetRequest(fmt.Sprintf(
 		"https://restapi.amap.com/v5/ip?parameters&key=b9bd34580b7133934c40a831703cc3fb&ip=%s&type=%d",
