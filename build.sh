@@ -13,16 +13,20 @@ echo "-> 编译..."
 go build ./
 echo "-> 压缩..."
 upx --best -k apihut-server
-echo "-> 移动..."
+echo "-> 复制配置..."
 if [ ! -d "./build/prod/config/" ]; then
   mkdir -p "./build/prod/config/"
 fi
 cp -u apihut-server ./build/prod/apihut-server
-cp -u ./config/apihut.yml ./build/prod/config/apihut.yml
+cp -u -p ./config/apihut.yml ./build/prod/config/apihut.yml
+echo "-> 复制静态文件..."
+cp -u -r -p ./data ./build/prod/data
+cp -u -r -p ./templates ./build/prod/templates
+cp -u -r -p ./static ./build/prod/static
 echo "-> 删除产出文件..."
 rm apihut-server
 rm apihut-server.~
-echo "== Done! =="
+printf "\n == Done! == \n"
 read -r -p "Exit?" input
 cd ./build/prod || exit
 start .
