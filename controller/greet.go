@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"apihut-server/constant"
 	"apihut-server/model"
 	"apihut-server/server"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +23,18 @@ func GreetHandler(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err.Error())
 		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	output, _ := c.GetQuery("output")
+	switch output {
+	case constant.TextOutput.String():
+		break
+
+	}
+
+	if output, _ := c.GetQuery("output"); output == constant.TextOutput.String() {
+		c.String(http.StatusOK, g.Sentence)
 		return
 	}
 

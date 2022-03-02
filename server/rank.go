@@ -23,6 +23,7 @@ import (
 var (
 	myProxyIP              string
 	ErrDataUpdateMore1Hour = errors.New("热榜数据更新间隔超过1小时")
+	ErrCrawl               = errors.New("抓取失败")
 )
 
 // GetRank 获取热榜
@@ -30,7 +31,7 @@ func GetRank(siteName constant.SiteName) (rank *model.Rank, err error) {
 	// 获取代理IP
 	myProxyIP, err = GetProxyIP()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("获取代理IP", err)
 		return nil, err
 	}
 
@@ -90,9 +91,15 @@ func getBaiduRank() (rank *model.Rank, err error) {
 	c.Visit(constant.Baidu.RankUrl())
 	//c.Visit("http://baidu.apihut.net/")
 
+	if len(list) != 0 {
+		list = list[1:]
+	} else {
+		return nil, ErrCrawl
+	}
+
 	rank = &model.Rank{
 		SiteName:    constant.Baidu,
-		List:        list[1:],
+		List:        list,
 		CreatedTime: time.Now(),
 	}
 	// 更新缓存

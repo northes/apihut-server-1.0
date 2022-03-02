@@ -28,7 +28,7 @@ func GetProxyIP() (proxyIP string, err error) {
 func GetProxyIPFromKuaiNiao() (proxyIP string, err error) {
 	var p model.ProxyIP
 	err = util.HttpGetRequest(
-		"http://api.kuainiaoip.com/index.php?fetch_type=share&pool_id=&qty=1&time=100&province=%E6%89%80%E6%9C%89&city=%E6%89%80%E6%9C%89&protocol=1&format=json&dt=1",
+		"http://api.kuainiaoip.com/index.php?fetch_type=2021062321322782921&pool_id=&qty=1&time=101&province=%E6%89%80%E6%9C%89&city=%E6%89%80%E6%9C%89&protocol=1&format=json&dt=1",
 		&p,
 	)
 	if err != nil {

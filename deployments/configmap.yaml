@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apihut-server-conf
+data:
+  config.yaml: |
+    name: "APIHut"
+    mode: "debug"
+    #mode: "release"
+    port: 8080
+
+    mysql:
+      host: "mysql"
+      port: 3306
+      user: "root"
+      password: "Pd803Wk9Rg"
+      dbname: "apihut"
+      max_open_conns: 200
+      max_idle_conns: 50
+    redis:
+      host: "redis-master"
+      port: 6379
+      password: ""
+      db: 0
+      pool_size: 100
+    path:
+      logs: "./logs"
+      data: "./data"
+      temp: "./temp"

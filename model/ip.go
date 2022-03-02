@@ -6,7 +6,7 @@ type IP struct {
 	Status    string    `json:"status,omitempty" xorm:"-"`
 	Info      string    `json:"info,omitempty" xorm:"-"`
 	Infocode  string    `json:"infocode,omitempty" xorm:"-"`
-	IP        string    `json:"ip" xorm:"index notnull comment(IP)"`
+	IP        string    `json:"ip" xorm:"index pk notnull comment(IP)"`
 	Country   string    `json:"country"  xorm:"comment(国家)"`
 	Province  string    `json:"province" xorm:"comment(省份)"`
 	City      string    `json:"city" xorm:"comment(城市)"`

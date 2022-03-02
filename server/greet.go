@@ -49,7 +49,7 @@ func getTimeCode() constant.TimeCode {
 		t = constant.TimeNoon
 	case hour < 18:
 		t = constant.TimeAfternoon
-	case hour < 21:
+	case hour < 22:
 		t = constant.TimeEvening
 	case hour < 24:
 		t = constant.TimeNight

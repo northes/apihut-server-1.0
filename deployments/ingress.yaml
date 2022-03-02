@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apihut
+spec:
+  tls:
+    - hosts:
+        - apihut.net
+      secretName: apihut-tls
+    - hosts:
+        - docs.apihut.net
+      secretName: apihut-docs-tls
+  rules:
+    - host: apihut.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: apihut-server
+                port:
+                  number: 80
+    - host: docs.apihut.net
+      http:
+        paths:
+          - backend:
+              service:
+                name: apihut-docs
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

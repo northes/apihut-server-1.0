@@ -43,7 +43,7 @@ type Path struct {
 
 func Init() (err error) {
 
-	viper.SetConfigFile("./config/apihut.yml")
+	viper.SetConfigFile("./etc/config.yml")
 	viper.AddConfigPath(".")   // 指定查找配置文件的路径（这里使用相对路径）
 	err = viper.ReadInConfig() // 读取配置信息
 	if err != nil {

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apihut-server
+spec:
+  selector:
+    matchLabels:
+      app: apihut-server
+  template:
+    metadata:
+      labels:
+        app: apihut-server
+    spec:
+      containers:
+        - name: web
+          image: ccr.ccs.tencentyun.com/apihut/server:1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /apihut/etc
+              name: conf
+      volumes:
+        - name: conf
+          configMap:
+            name: apihut-server-conf
+            items:
+              - key: config.yaml
+                path: config.yml
+      imagePullSecrets:
+        - name: tencent-docker

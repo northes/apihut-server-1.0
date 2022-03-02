@@ -9,3 +9,7 @@ const (
 	TextOutput   OutputCode = "text"
 	SvgOutput    OutputCode = "svg"
 )
+
+func (o OutputCode) String() string {
+	return string(o)
+}
