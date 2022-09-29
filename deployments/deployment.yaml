@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ccr.ccs.tencentyun.com/apihut/server:1.0.1
+          image: ccr.ccs.tencentyun.com/apihut/server:test
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

@@ -3,9 +3,10 @@ package model
 import "time"
 
 type IP struct {
+	ID        int       `json:"-" xorm:"pk autoincr notnull comment(id)"`
 	Status    string    `json:"status,omitempty" xorm:"-"`
 	Info      string    `json:"info,omitempty" xorm:"-"`
-	Infocode  string    `json:"infocode,omitempty" xorm:"-"`
+	InfoCode  string    `json:"infocode,omitempty" xorm:"-"`
 	IP        string    `json:"ip" xorm:"index pk notnull comment(IP)"`
 	Country   string    `json:"country"  xorm:"comment(国家)"`
 	Province  string    `json:"province" xorm:"comment(省份)"`

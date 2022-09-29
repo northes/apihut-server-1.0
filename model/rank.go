@@ -6,7 +6,7 @@ import (
 )
 
 type Rank struct {
-	ID          int64             `xorm:"pk index notnull comment(id)" json:"-" `
+	ID          int64             `xorm:"pk autoincr notnull comment(id)" json:"-" `
 	ReportTime  string            `xorm:"-" json:"report_time"`
 	SiteName    constant.SiteName `xorm:"notnull VARCHAR(255) comment(网站名称)" json:"-"`
 	List        []RankItem        `xorm:"notnull json comment(热榜)" json:"lists"`

@@ -13,12 +13,12 @@ data:
       host: "mysql"
       port: 3306
       user: "root"
-      password: "Pd803Wk9Rg"
+      password: "123456"
       dbname: "apihut"
       max_open_conns: 200
       max_idle_conns: 50
     redis:
-      host: "redis-master"
+      host: "redis"
       port: 6379
       password: ""
       db: 0

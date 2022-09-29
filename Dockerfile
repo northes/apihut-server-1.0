@@ -13,6 +13,8 @@ WORKDIR /apihut
 COPY --from=builder /build/bin .
 COPY etc etc
 COPY templates templates
+COPY data data
+COPY static static
 
 EXPOSE 8080
 

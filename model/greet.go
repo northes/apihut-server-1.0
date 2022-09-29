@@ -3,7 +3,7 @@ package model
 import "apihut-server/constant"
 
 type Greet struct {
-	ID       int                   `xorm:"pk index notnull comment(句子id)" json:"-" `
+	ID       int                   `xorm:"pk autoincr notnull comment(句子id)" json:"-" `
 	Sentence string                `xorm:"notnull comment(句子详情)" json:"sentence"`
 	Author   string                `xorm:"comment(句子作者)" json:"author"`
 	Language constant.LanguageCode `xorm:"notnull comment(语言)" json:"language" form:"language"`

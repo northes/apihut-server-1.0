@@ -26,7 +26,7 @@ func GetIPInfo(ip string) (ipInfo *model.IP, err error) {
 	if err != nil && err == mysql.ErrNotExist {
 		fmt.Println("从网络获取")
 		ipInfo, err = getIPInfoFromGaode(address, version)
-		_ = mysql.CreatIP(ipInfo)
+		// _ = mysql.CreatIP(ipInfo)
 	}
 
 	return ipInfo, nil
@@ -48,7 +48,7 @@ func getIPInfoFromGaode(address net.IP, version int) (ipInfo *model.IP, err erro
 		return nil, util.ErrAPIRequest
 	}
 
-	ipInfo.Status, ipInfo.Info, ipInfo.Infocode = "", "", ""
+	ipInfo.Status, ipInfo.Info, ipInfo.InfoCode = "", "", ""
 
 	return ipInfo, nil
 }
